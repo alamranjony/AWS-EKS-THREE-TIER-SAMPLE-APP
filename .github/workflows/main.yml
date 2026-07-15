@@ -53,6 +53,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::896364725826:role/github-actions-role-eks
           aws-region: ${{ env.AWS_REGION }}
+      - name: Test AWS Credential
+        run: aws sts get-caller-identity
 
       - name: Login to Amazon ECR
         id: login-ecr
