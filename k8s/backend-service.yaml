@@ -1,0 +1,16 @@
+# ClusterIP (default type) - only reachable from inside the cluster.
+# Never expose this as LoadBalancer/NodePort or reference it from the
+# Ingress - that's what keeps the backend internal-only.
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP

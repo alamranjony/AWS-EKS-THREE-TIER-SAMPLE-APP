@@ -1,0 +1,45 @@
+# Uses the AWS Load Balancer Controller - AWS's native controller that
+# provisions an Application Load Balancer (ALB) directly from this
+# Ingress resource. Requires the controller installed on the cluster
+# (see main README's EKS setup section) and IRSA-granted permissions to
+# create/manage ALBs, target groups, and listeners on your behalf.
+#
+# Only the frontend Service is referenced here - the backend is never
+# exposed through this Ingress, keeping it cluster-internal only.
+#
+# --- On domains: unlike AKS, ALB gives you a free DNS name automatically
+# The moment this Ingress is applied, AWS provisions the ALB and assigns
+# it a DNS name like:
+#   devops-assessment-12345678.us-east-1.elb.amazonaws.com
+# That's usable immediately with NO `host:` field needed - run
+# `kubectl get ingress frontend-ingress` and open the ADDRESS column.
+# A custom domain (Route 53 record / CNAME to that ALB DNS name) is
+# optional, only needed for production branding or automated TLS via
+# ACM + a real hostname.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    # Uncomment once you have an ACM certificate for a custom domain:
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:__REGION__:__AWS_ACCOUNT_ID__:certificate/__CERT_ID__"
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+  ingressClassName: alb
+  rules:
+    - # host: devops-assessment.__YOUR_DOMAIN__   # only needed for a custom domain via Route 53
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000
