@@ -1,0 +1,14 @@
+{
+  "name": "devops-assessment-backend",
+  "version": "1.0.0",
+  "description": "Backend API for DevOps Engineer Assessment (AWS/EKS/RDS MySQL variant)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.10.0"
+  }
+}
