@@ -24,7 +24,7 @@ spec:
           # Image tag is templated by the pipeline - never hardcode "latest".
           # Example after pipeline substitution:
           # <account>.dkr.ecr.<region>.amazonaws.com/backend:1.4.0
-          image: __ECR_REPOSITORY_URI__/backend:__IMAGE_TAG__
+          image: 896364725826.dkr.ecr.ap-southeast-1.amazonaws.com/devopsassess-backend/backend:__IMAGE_TAG__
           ports:
             - containerPort: 8080
           envFrom:
