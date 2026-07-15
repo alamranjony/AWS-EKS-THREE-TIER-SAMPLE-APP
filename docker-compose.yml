@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: devops-assessment-backend:local
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      API_MESSAGE: "Hello from backend (local compose)"
+      DB_HOST: "not-configured-locally"
+      DB_NAME: "appdb"
+      DB_USER: "appuser"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    image: devops-assessment-frontend:local
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      BACKEND_URL: "http://backend:8080"
+    depends_on:
+      - backend
+    restart: unless-stopped
